@@ -195,4 +195,35 @@ aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable
 
 ---
 
+# 4. What is the Terraform workflow as a team?**
+
+## Terraform Workflow as a Team
+When a team works together using **Terraform**, there’s a process to follow to make sure everyone can contribute and avoid mistakes. Here's how the **workflow** works for a team:
+
+1. **Write Code for Infrastructure**
+   - Team members write **Terraform code** to describe the infrastructure they want to build or manage. This code is saved in a shared location like **Git** so everyone can see it and work on it.
+
+2. **Use Version Control**
+   - The code is stored in **Git** (or another version control system). This helps to keep track of changes and makes sure everyone is working on the most recent version of the code.
+
+3. **Plan Changes First**
+   - Before making any changes to the infrastructure, a team member runs the command **terraform plan**. This shows what Terraform will change, and the team can check if everything looks good before applying it.
+
+4. **Apply the Changes**
+   - Once the changes are approved, the team member runs the command **terraform apply**. This will make the changes to the infrastructure as planned.
+
+5. **Work with the State File**
+   - Terraform keeps a **state file** that records what is currently in the infrastructure. This file is important and is shared between the team. To prevent problems, the team uses a system to **lock** the state file, so no one else can change it while someone else is using it.
+
+6. **Communicate and Collaborate**
+   - Good **communication** is important. Team members should talk about any changes before making them. Using **Git pull requests** is a good way to review changes before they are added to the code.
+
+7. **Use Remote Tools (Optional)**
+   - In bigger teams, using tools like **Terraform Cloud** or **remote backends** can help store the state file safely, manage permissions, and make it easier to work together.
+
+---
+
+By following this workflow, the team can work together smoothly, avoid mistakes, and manage infrastructure safely with Terraform.
+
+---
 
