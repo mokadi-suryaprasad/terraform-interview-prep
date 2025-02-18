@@ -45,7 +45,7 @@ This repository is designed to help you understand Terraform from the ground up.
 ### 6. **terraform fmt**  
    Formats the configuration files for consistency.
 
-1. What is the difference between the declarative and imperative approaches in infrastructure management?
+# 1. What is the difference between the declarative and imperative approaches in infrastructure management?
 
 ## Difference Between Declarative and Imperative Approaches in Infrastructure Management
 
@@ -150,7 +150,7 @@ aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable
 - **Imperative**: You define **how** to achieve the goal, step-by-step.
 
 
-2. Share 5 key points about Terraform providers.
+# 2. Share 5 key points about Terraform providers.
 
 ## Key Points About Terraform Providers
 
@@ -174,7 +174,7 @@ aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable
    ```
 
 
-3. What are the benefits of IaC like Terraform?
+# 3. What are the benefits of IaC like Terraform?
 
 # Benefits of Infrastructure as Code (IaC) - Terraform
 
