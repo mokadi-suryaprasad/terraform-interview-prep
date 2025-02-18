@@ -198,6 +198,7 @@ aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable
 # 4. What is the Terraform workflow as a team?**
 
 ## Terraform Workflow as a Team
+
 When a team works together using **Terraform**, there’s a process to follow to make sure everyone can contribute and avoid mistakes. Here's how the **workflow** works for a team:
 
 1. **Write Code for Infrastructure**
@@ -221,9 +222,29 @@ When a team works together using **Terraform**, there’s a process to follow to
 7. **Use Remote Tools (Optional)**
    - In bigger teams, using tools like **Terraform Cloud** or **remote backends** can help store the state file safely, manage permissions, and make it easier to work together.
 
+8. **Testing Infrastructure Changes**
+   - Teams should **test** changes in a non-production environment before applying them to production. This helps to ensure that the changes won’t cause any issues.
+
+9. **Use of Modules for Reusability**
+   - **Terraform modules** allow teams to reuse infrastructure code across different projects. This makes it easier to manage and maintain infrastructure over time.
+
+10. **Policy Enforcement with Sentinel (for Terraform Cloud)**
+    - For larger teams, **Sentinel** can enforce policies to ensure that infrastructure complies with organizational standards and security requirements.
+
+11. **Managing Secrets Securely**
+    - Use secret management tools like **AWS Secrets Manager** or **Vault** to securely handle sensitive data in Terraform without exposing it in the code.
+
+12. **Continuous Integration and Continuous Deployment (CI/CD)**
+    - Set up **CI/CD pipelines** to automatically test, plan, and apply Terraform changes. This ensures that infrastructure changes are applied in a consistent and automated way.
+
+13. **State Locking with Remote Backends**
+    - Using a **remote backend** ensures that only one person can make changes to the state file at a time, preventing conflicts and issues.
+
+14. **Collaboration with Pull Requests and Code Reviews**
+    - **Code reviews** help ensure that changes are correct and don’t introduce any problems. Teams should use **pull requests** to review and approve changes before applying them.
+
 ---
 
 By following this workflow, the team can work together smoothly, avoid mistakes, and manage infrastructure safely with Terraform.
 
 ---
-
