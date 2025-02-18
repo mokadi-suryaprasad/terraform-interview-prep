@@ -63,7 +63,54 @@ resource "aws_instance" "example" {
   instance_type = "t2.micro"
 }
 ```
+With Kubernetes, you describe the **desired state** of your application (e.g., the number of replicas of a pod, which container image to use, and how services should be exposed), and Kubernetes automatically ensures that the system matches this state.
 
+### **How it Works:**
+1. You write a YAML file that describes your application's resources (e.g., Deployment, Service).
+2. You apply the YAML file using the `kubectl apply` command.
+3. Kubernetes compares the current state with the desired state you defined.
+4. If necessary, Kubernetes automatically takes action to ensure that the actual state matches your desired state (e.g., creating new pods or scaling up/down replicas).
+
+### **Example: Kubernetes Declarative Configuration (YAML)**
+
+Here’s an example of a declarative Kubernetes configuration file for a **Deployment** and a **Service**:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 3  # Defines the number of pod replicas
+  selector:
+    matchLabels:
+      app: my-app  # Selector to match the app label in the pods
+  template:
+    metadata:
+      labels:
+        app: my-app  # Defines the label for the pod
+    spec:
+      containers:
+      - name: my-app-container
+        image: nginx:latest  # Container image to use
+        ports:
+        - containerPort: 80  # Port exposed by the container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app  # Selects pods with the label 'app=my-app'
+  ports:
+    - protocol: TCP
+      port: 80  # Port exposed by the service
+      targetPort: 80  # Port exposed by the container in the pod
+  type: LoadBalancer  # Exposes the service to the outside world
+```
 ## Imperative Approach in Infrastructure Management
 
 ### **What is the Imperative Approach?**
@@ -87,3 +134,19 @@ aws ec2 run-instances --image-id ami-12345678 --instance-type t2.micro
 # Step 2: Modify instance settings after launch
 aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable-api-termination
 ```
+## Key Differences Between Declarative and Imperative Approaches
+
+| **Aspect**                | **Declarative Approach**                                                   | **Imperative Approach**                                                   |
+|---------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| **What You Define**        | You define **what** you want (desired state) and let the system figure out **how** to achieve it. | You define **how** to achieve the result, specifying each step of the process. |
+| **System Behavior**        | The system manages and adjusts to achieve the desired state automatically. | The system follows your exact instructions without automatic adjustments.  |
+| **Control Over Process**   | Less control over the specific steps. You focus on the end result.         | Full control over each step and action in the process.                    |
+| **Ease of Maintenance**    | Easier to maintain; just update the desired state and apply it again.      | Harder to maintain, especially with complex systems. Requires manual updates for each change. |
+| **Idempotency**            | **Idempotent**: Re-running the same configuration results in the same outcome. | Not necessarily idempotent; re-running may create duplicate resources or repeat steps. |
+| **Focus**                  | Focuses on the **desired end state** (e.g., number of replicas, container image). | Focuses on the **process** and **steps** needed to achieve the goal.      |
+
+### **Summary**:
+- **Declarative**: You describe **what** you want (e.g., desired state) and the system takes care of the rest.
+- **Imperative**: You define **how** to achieve the goal, step-by-step.
+
+
