@@ -1,7 +1,5 @@
 # Terraform Interview Preparation
 
-This repository contains resources, examples, and notes to help you prepare for a Terraform interview. It covers key Terraform concepts, commands, and best practices, along with examples to help you understand the declarative approach to infrastructure provisioning.
-
 ## Introduction
 
 This repository is designed to help you understand Terraform from the ground up. It is structured to include both theory and practical examples, so you can get comfortable with how to use Terraform for provisioning and managing infrastructure.
