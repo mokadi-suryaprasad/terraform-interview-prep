@@ -486,3 +486,145 @@ The lifecycle of a Terraform resource refers to the journey a resource goes thro
 
 Terraform automatically manages the lifecycle of your infrastructure, making it easier to handle everything from creation to deletion. As long as you define your infrastructure in Terraform's configuration files, it will take care of updating, deleting, and creating resources while keeping everything in sync.
 
+# 11. How to Inspect the Current State of the Infra Applied
+
+This guide explains how you can inspect the current state of the infrastructure you have applied using Terraform. Knowing how to view your infrastructure's state is crucial for understanding how your resources are configured and managing changes effectively.
+
+## Prerequisites
+
+Before you begin, make sure you have the following:
+
+- **Terraform** installed on your machine.
+- Your **Terraform project** set up with the `.tf` files (configuration files) for your infrastructure.
+- A **backend** configured for storing Terraform state (e.g., local, AWS S3, etc.).
+
+## 1. Understanding Terraform State
+
+Terraform keeps track of the infrastructure you've applied in a **state file**. The state file holds all the details about your resources, which Terraform uses to compare your current infrastructure with the desired state defined in your `.tf` files. The state is usually stored in `terraform.tfstate`.
+
+## 2. Inspecting the State
+
+To inspect the state of your infrastructure, Terraform offers several commands. Below are the most commonly used ones.
+
+### `terraform show`
+
+This command displays the current state of your infrastructure in a human-readable format.
+
+```bash
+terraform show
+```
+
+# 12. Scenarios: `terraform plan ✅` but `terraform apply ❌`
+
+In this guide, we will discuss some common scenarios where `terraform plan` runs successfully (✅) but `terraform apply` fails (❌). This can happen due to various reasons, even when the plan seems correct.
+
+## Prerequisites
+
+Before proceeding, make sure you have:
+
+- **Terraform** installed on your machine.
+- A **Terraform project** with configuration files.
+- Proper access and credentials for your cloud provider (if applicable).
+
+## Why does `terraform plan` succeed but `terraform apply` fail?
+
+While `terraform plan` gives you a preview of the changes Terraform intends to make, it doesn't actually apply them to your infrastructure. `terraform apply` actually executes those changes. There are cases where the plan looks fine, but when you try to apply the changes, errors occur. Here are some common scenarios:
+
+## 1. **Insufficient Permissions or Credentials** (❌)
+
+### Scenario:
+Your Terraform plan shows no issues, but `terraform apply` fails due to insufficient permissions.
+
+### Cause:
+- You might have the necessary read permissions to run `terraform plan` but lack the required permissions to create, modify, or delete resources when running `terraform apply`.
+- Terraform checks your permissions when applying changes, and a lack of permissions can cause the apply operation to fail.
+
+### Example:
+- You can list resources in AWS using `terraform plan` but don't have the permissions to create an EC2 instance during `terraform apply`.
+
+### Solution:
+Ensure the IAM user/role you're using has sufficient permissions to perform the operations defined in your Terraform files.
+
+## 2. **Resource Locking** (❌)
+
+### Scenario:
+Terraform’s plan suggests that it will modify a resource, but when applying, it fails because the resource is locked by another process or user.
+
+### Cause:
+- Some resources, especially in cloud environments, might be locked for other processes or updates, preventing Terraform from modifying them.
+- A resource lock can occur if another user or system is currently managing the resource.
+
+### Example:
+- If you're using an AWS S3 bucket, another person or process might have locked the bucket for modification, leading to failure during `terraform apply`.
+
+### Solution:
+Check the resource’s status in your cloud provider’s dashboard or use the appropriate commands to unlock the resource before re-running `terraform apply`.
+
+## 3. **State Drift** (❌)
+
+### Scenario:
+`terraform plan` works, but `terraform apply` fails due to changes made outside of Terraform.
+
+### Cause:
+- The Terraform state file doesn't match the actual state of resources. If someone manually modified a resource or the resource was changed by another system, Terraform may get confused and fail to apply the changes.
+- Terraform can detect state drift (differences between the actual state and the state in the Terraform configuration) during the `apply` phase.
+
+### Example:
+- Someone manually deleted a security group that Terraform was about to modify. `terraform plan` will show no issues, but `terraform apply` will fail when Terraform attempts to modify the non-existing security group.
+
+### Solution:
+Run `terraform refresh` to sync your state file with the real infrastructure, or manually fix the state mismatch.
+
+## 4. **Missing Dependencies** (❌)
+
+### Scenario:
+`terraform plan` completes successfully, but `terraform apply` fails due to missing resources or dependencies.
+
+### Cause:
+- Terraform might plan to create or modify resources that depend on other resources. If those dependencies are missing or improperly configured, the apply phase may fail.
+- This usually happens when resource dependencies are defined incorrectly or resources haven't been created yet.
+
+### Example:
+- You’re trying to create a new EC2 instance but forgot to define a security group. During `terraform plan`, Terraform doesn’t detect this issue, but when you apply the changes, it fails due to the missing security group.
+
+### Solution:
+Check the resource dependencies and ensure all required resources are properly defined and available.
+
+## 5. **Provider or API Limitations** (❌)
+
+### Scenario:
+The plan shows no issues, but when applying, the API or provider hits a limit, causing a failure.
+
+### Cause:
+- Your cloud provider may have API limits or quotas that are hit during the apply phase, especially if you are creating or modifying many resources at once.
+- Examples of such limits include the maximum number of instances in a region, API rate limits, or service quotas.
+
+### Example:
+- You attempt to create more instances than allowed by your cloud provider’s service limits. `terraform plan` doesn’t validate these limits, but `terraform apply` fails when trying to execute the changes.
+
+### Solution:
+- Check your cloud provider’s quotas and limits.
+- Use Terraform's `-parallelism` flag to apply changes in smaller batches.
+
+## 6. **Invalid or Inconsistent Configuration** (❌)
+
+### Scenario:
+Terraform plan succeeds, but the resources are not applied as expected due to misconfigurations in your Terraform files.
+
+### Cause:
+- There might be syntax errors, incorrect values, or invalid references in your `.tf` files that aren’t immediately detected in the `plan` phase but cause issues when Terraform tries to apply them.
+
+### Example:
+- You reference an undefined variable in the configuration, but Terraform applies the plan without any validation issues. During `terraform apply`, Terraform fails because it can’t resolve the variable.
+
+### Solution:
+Double-check the Terraform configuration files for any potential mistakes or missing references and ensure all variables and resources are correctly defined.
+
+## Conclusion
+
+While `terraform plan` is an important part of the workflow, it’s not always perfect at predicting issues that can arise when applying changes. `terraform apply` takes the actual action of making changes to your infrastructure, and sometimes errors happen during that phase due to factors like permission issues, state drift, or external modifications.
+
+Understanding these common issues will help you troubleshoot and resolve errors effectively. Always carefully read the error messages during `terraform apply` to pinpoint the issue.
+
+If you have any questions or need further clarification, feel free to reach out!
+
