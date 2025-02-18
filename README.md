@@ -150,3 +150,49 @@ aws ec2 modify-instance-attribute --instance-id i-1234567890abcdef0 --no-disable
 - **Imperative**: You define **how** to achieve the goal, step-by-step.
 
 
+2. Share 5 key points about Terraform providers.
+
+## Key Points About Terraform Providers
+
+### 1. **What is a Provider?**
+   - **Terraform Providers** are plugins that allow Terraform to interact with various services and APIs, like AWS, Google Cloud, Azure, Kubernetes, etc. Providers enable Terraform to create, manage, and update resources in these platforms.
+
+### 2. **Each Provider Requires Authentication**
+   - To use a provider, you usually need to **authenticate** it, which means giving Terraform the necessary credentials or API keys. Each provider has its own way of handling authentication. For example, AWS requires AWS Access and Secret keys, while Azure requires a Service Principal.
+
+### 3. **One Provider Per Resource Type**
+   - Providers manage specific resources. For example, the **AWS provider** can manage resources like EC2 instances, S3 buckets, VPCs, etc., while the **Azure provider** manages resources in Azure. Each provider is specialized for interacting with a cloud or service platform.
+
+### 4. **Providers Can Be Configured in Terraform**
+   - Providers need to be configured in the **Terraform configuration file**. You define the provider you want to use and provide the necessary settings (like authentication details, region, etc.).
+
+   Example for AWS provider:
+   ```hcl
+   provider "aws" {
+     region = "us-west-2"
+   }
+   ```
+
+
+3. What are the benefits of IaC like Terraform?
+
+# Benefits of Infrastructure as Code (IaC) - Terraform
+
+1. **Consistency and Repeatability**
+   - With **Terraform**, you can write your infrastructure as code. This means you can **build the same infrastructure** every time, without mistakes. It helps to keep your setup **consistent** across different environments like development, staging, or production.
+
+2. **Automation and Speed**
+   - **Terraform** automates the process of creating and managing infrastructure. This **saves time** and effort because you don’t have to manually set up servers or configure networks. Everything can be done automatically, which also reduces the chance of human errors.
+
+3. **Version Control and Collaboration**
+   - With IaC, your infrastructure setup is saved as **code**, and you can store this code in version control systems like **Git**. This allows multiple people to **work together** on infrastructure changes. It also keeps track of all the changes you make over time, and you can easily go back to a previous setup if needed.
+
+4. **Better Cost Management**
+   - Using **Terraform** helps you see exactly what resources you are using. This makes it easier to spot unused resources or **save money** by only paying for what you need. Terraform can show you a preview of changes before applying them, so you can avoid unexpected costs.
+
+5. **Easier Scaling**
+   - With **Terraform**, you can easily change and scale your infrastructure. If you need more servers or different services, you simply update the code. This makes it **quick and easy** to change the size of your infrastructure as your needs grow.
+
+---
+
+
