@@ -195,3 +195,145 @@ export TF_LOG=DEBUG
 export TF_LOG_PATH=terraform-debug.log
 terraform plan
 ```
+
+# 5.What is a Module in Terraform?
+
+## Terraform Modules
+
+In **Terraform**, a **module** is a container for multiple resources that are used together. Modules allow you to organize and reuse code in your Terraform configurations. Instead of repeating the same resources multiple times, you can create a module and use it in different places.
+
+Modules help keep your Terraform code clean, reusable, and easy to maintain.
+
+### Why Use Modules?
+
+- **Reusability**: You can use the same module in multiple places across your infrastructure, which reduces repetition.
+- **Organization**: Modules help organize your code into logical blocks, making it easier to understand and manage.
+- **Best Practices**: Using modules encourages a modular approach to building infrastructure, which is easier to maintain in the long term.
+
+---
+
+## Where to Check for Stability of Modules?
+
+When using modules, it's important to make sure they are **stable** and well-maintained. Here’s where you can check:
+
+### 1. **Terraform Registry**
+The **Terraform Registry** is the official source for finding reusable modules. You can search for modules that are stable, well-documented, and frequently updated.
+
+Visit the Terraform Registry here: [https://registry.terraform.io/](https://registry.terraform.io/)
+
+Look for modules that have:
+- Clear documentation
+- Active maintainers
+- Good version history and updates
+
+### 2. **GitHub Repositories**
+Many Terraform modules are open-source and hosted on **GitHub**. Check the repository for:
+- Recent commits (active development)
+- Open and closed issues (to see if the module has bugs or ongoing problems)
+- Pull requests (if there are changes being made)
+
+---
+
+## Example of Using a Module
+
+Let’s look at an example of how to use a module to create an AWS EC2 instance. This example assumes you are using a module from the Terraform Registry.
+
+### 1. **Create a Module for EC2 Instance**
+
+You can find a module for creating an EC2 instance in the Terraform Registry. For example, this is how to use a module to create an EC2 instance:
+
+```hcl
+module "my_ec2_instance" {
+  source = "terraform-aws-modules/ec2-instance/aws"
+  
+  ami                    = "ami-0c55b159cbfafe1f0"
+  instance_type           = "t2.micro"
+  key_name                = "my-key"
+  vpc_security_group_ids  = ["sg-12345678"]
+  subnet_id               = "subnet-12345678"
+  associate_public_ip_address = true
+}
+```
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+# 6.What is a Variable in Terraform?
+
+## Terraform Variables
+
+In **Terraform**, a **variable** is a way to define values that you want to reuse in your configuration. Instead of hardcoding values (like resource names, instance types, or regions), you can use variables to make your configuration flexible, reusable, and easier to manage.
+
+Variables allow you to pass different values to your Terraform code depending on the environment or situation.
+
+---
+
+## Types of Variables in Terraform
+
+There are **5 main types** of variables in Terraform:
+
+### 1. **String**
+
+A **string** variable is used for text values. It’s the most common type of variable.
+
+#### Example:
+
+```hcl
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+```
+### 2. **Number**
+
+A **number** variable is used for numeric values, such as integers or floating-point numbers.
+#### Example:
+
+```hcl
+variable "instance_count" {
+  type    = number
+  default = 2
+}
+```
+
+### 3. **Boolean**
+
+A **boolean** variable is used to hold either true or false values.
+#### Example:
+
+
+```hcl
+variable "enable_logging" {
+  type    = bool
+  default = true
+}
+```
+### 4. **List**
+
+A **list** variable is used to hold an ordered collection of values. Lists can contain values of any type, such as strings, numbers, or booleans.
+#### Example:
+
+```hcl 
+variable "availability_zones" {
+  type    = list(string)
+  default = ["us-west-1a", "us-west-1b"]
+}
+```
+### 5. **List**
+
+A **map** variable is used to hold key-value pairs (similar to a dictionary in other programming languages).
+#### Example:
+
+
+```hcl
+variable "tags" {
+  type = map(string)
+  default = {
+    "Name"        = "MyInstance"
+    "Environment" = "Dev"
+  }
+}
+```
