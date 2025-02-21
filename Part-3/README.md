@@ -549,3 +549,132 @@ resource "aws_security_group" "example" {
 4. **Group Similar Blocks Together:** When you have multiple dynamic blocks, group them logically to enhance readability.
 Leverage Variables: Use variables for more flexibility and reusability in different environments.
 5. **Ensure Dependency Order:** Be cautious of resource dependencies, especially when using dynamic blocks, and use depends_on when necessary to control resource order.
+
+
+# 10.What is Terraform Drift?
+
+## Terraform Drift & Best Practices
+
+**Terraform Drift** happens when the actual state of your infrastructure becomes different from the state defined in your Terraform configuration files. This occurs when changes are made to your resources outside of Terraform, such as manual changes in a cloud console or through other tools. Drift can cause inconsistencies in your infrastructure management and lead to errors when Terraform applies configurations.
+
+### Why Does Drift Happen?
+
+Drift can occur in these situations:
+- Manual changes are made outside of Terraform.
+- Changes are made by other automation tools that Terraform doesn't manage.
+- Terraform configuration files are not kept in sync with the infrastructure state.
+
+### How to Detect Drift?
+
+1. **Run `terraform plan`**: This will show the difference between the actual infrastructure state and what Terraform expects.
+2. **Run `terraform refresh`**: This updates Terraform’s state file to reflect the current state of infrastructure.
+
+### Best Practices for Managing Terraform Drift
+
+#### 1. **Run `terraform plan` Regularly**
+   Regularly run `terraform plan` to detect drift early and ensure that Terraform is in sync with the actual state of the infrastructure.
+
+#### 2. **Use `terraform refresh` Before `apply`**
+   Always run `terraform refresh` to make sure Terraform has the most up-to-date information about your infrastructure before applying any changes.
+
+#### 3. **Avoid Manual Changes to Infrastructure**
+   Avoid making manual changes in the cloud provider’s console. Always manage your infrastructure using Terraform to keep everything in sync.
+
+#### 4. **Use Remote Backends for State Management**
+   Store Terraform state in a remote backend (e.g., AWS S3, Terraform Cloud) with state locking enabled. This prevents conflicts and drift caused by multiple users or processes modifying the state.
+
+#### 5. **Automate Terraform Runs in CI/CD Pipelines**
+   Integrate Terraform with CI/CD pipelines to prevent manual changes and ensure infrastructure is always in the desired state.
+
+#### 6. **Monitor Infrastructure Changes**
+   Use cloud-native monitoring tools (e.g., AWS CloudWatch, Azure Monitor) to detect changes outside Terraform’s management.
+
+#### 7. **Use Drift Detection Tools**
+   Leverage cloud platform drift detection tools to receive alerts when resources are modified outside of Terraform.
+
+#### 8. **Use Version Control for Terraform Code**
+   Store all Terraform configuration files in version control (e.g., Git) to track changes and ensure configuration consistency.
+
+#### 9. **Reconcile Drift with Terraform**
+   If drift occurs, use `terraform apply` to bring the infrastructure back in line with the Terraform configuration or `terraform import` to import the current state into Terraform’s management.
+
+# 11.Terraform Dependencies
+
+## Types of Dependencies in Terraform
+
+In Terraform, **dependencies** describe the relationships between resources and determine the order of operations for resource creation, updating, or deletion. Understanding these dependencies is crucial for managing your infrastructure effectively.
+
+### 1. Implicit Dependencies
+These are automatically managed by Terraform when one resource references another. Terraform will automatically create or update resources in the correct order based on these references.
+
+#### Example:
+```hcl
+resource "aws_security_group" "example" {
+  name = "example-security-group"
+}
+
+resource "aws_instance" "example" {
+  ami             = "ami-12345678"
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.example.name]
+}
+```
+### 2. Explicit Dependencies (depends_on)
+
+- You can manually define dependencies between resources using the depends_on argument. This is useful when there’s no direct reference between resources but you want to ensure a specific order of operations.
+
+```hcl
+resource "aws_security_group" "example" {
+  name = "example-security-group"
+}
+
+resource "aws_instance" "example" {
+  ami             = "ami-12345678"
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.example.name]
+
+  depends_on = [aws_security_group.example]
+}
+```
+### 3. Data Dependencies
+
+- Data dependencies occur when a resource requires data from another resource or external source (e.g., cloud provider API). Terraform will automatically handle these dependencies.
+
+```hcl
+data "aws_ami" "latest" {
+  most_recent = true
+  owners      = ["amazon"]
+}
+
+resource "aws_instance" "example" {
+  ami           = data.aws_ami.latest.id
+  instance_type = "t2.micro"
+}
+```
+### 4. Module Dependencies
+- Modules can have dependencies based on the outputs and inputs shared between them. Terraform automatically respects these dependencies.
+
+```hcl
+module "vpc" {
+  source = "./modules/vpc"
+}
+
+module "instance" {
+  source = "./modules/instance"
+  vpc_id = module.vpc.vpc_id
+}
+```
+### 5. Resource Dependency via Output
+
+- When one resource’s output is used as an input for another resource, it automatically creates a dependency.
+
+```hcl
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "example" {
+  vpc_id     = aws_vpc.example.id
+  cidr_block = "10.0.1.0/24"
+}
+```
