@@ -537,9 +537,9 @@ resource "aws_security_group" "example" {
 
 ## Why Use Dynamic Blocks?
 
-**Avoid Repetition:** Use dynamic blocks to generate multiple similar blocks without repeating the same code.
-**Flexibility:** Dynamic blocks allow you to generate blocks based on variables or data that can change.
-**Cleaner Code:** They help reduce clutter and make your Terraform code more concise and maintainable.
+- **Avoid Repetition:** Use dynamic blocks to generate multiple similar blocks without repeating the same code.
+- **Flexibility:** Dynamic blocks allow you to generate blocks based on variables or data that can change.
+- **Cleaner Code:** They help reduce clutter and make your Terraform code more concise and maintainable.
 
 ## Best Practices for Using Dynamic Blocks
 
